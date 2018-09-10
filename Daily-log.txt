@@ -1,0 +1,33 @@
+Day 1: 10-09-2018 Monday
+
+Learn the php basic
+
+Kow to run the php file
+https://stackoverflow.com/questions/47027347/opening-a-php-file-with-xampp
+
+C->xampp->create the folder in hddocs
+Like phpexample
+create the file with the extension of .php
+Open browser
+localhost/folderName
+Click the file which you want to execute
+
+array
+<?php
+$variable_name[n] = value;
+?>
+Or
+
+<?php
+$variable_name = array(n => value, …);
+?>
+
+<?php
+foreach($array_variable  as $array_values){
+
+block of code to be executed
+
+}
+?>
+
+Slim Framework::::https://www.androidhive.info/2014/01/how-to-create-rest-api-for-android-app-using-php-slim-and-mysql-day-12-2/
