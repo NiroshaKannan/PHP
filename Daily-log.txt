@@ -1,5 +1,6 @@
+----------------------------------------------------------------------------------------------------------------------------------------------
 Day 1: 10-09-2018 Monday
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 Learn the php basic
 
 Kow to run the php file
@@ -31,3 +32,269 @@ block of code to be executed
 ?>
 
 Slim Framework::::https://www.androidhive.info/2014/01/how-to-create-rest-api-for-android-app-using-php-slim-and-mysql-day-12-2/
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+Day 2: 11-09-2018 Tuesday
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+how to know the password of the phpmyadmin
+
+C:\xampp\phpMyAdmin
+in this find the file 
+config.inc.php
+
+then see the password
+url: https://stackoverflow.com/questions/17759776/how-to-get-login-option-for-phpmyadmin-in-xampp/17760139
+
+/* Authentication type and info */
+$cfg['Servers'][$i]['auth_type'] = 'config';
+$cfg['Servers'][$i]['user'] = 'root';
+$cfg['Servers'][$i]['password'] = '';
+$cfg['Servers'][$i]['extension'] = 'mysqli';
+$cfg['Servers'][$i]['AllowNoPassword'] = true;
+$cfg['Lang'] = '';
+
+
+how to go the phpmyadmin
+
+localhost/phpmyadmin
+
+source for PDO PHP Data Object
+https://www.w3schools.com/php/php_mysql_intro.asp
+
+
+source in php oops
+https://www.guru99.com/object-oriented-programming.html
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+Day 3: 12-09-2018 Wednesday
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+how to go to the advanced rest client
+
+chrome://apps/
+
+insertAPIKEY
+
+
+class DbConnect {
+
+    private $conn;
+
+    function __construct() {        
+    }
+
+    /**
+     * Establishing database connection
+     * @return database connection handler
+     */
+    function connect() {
+        include_once dirname(__FILE__) . '/Config.php';
+
+     try {
+		$this->conn = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USERNAME, DB_PASSWORD);
+		$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+		}
+		catch (PDOException $pe) {
+	    die("Could not connect to the database $dbname :" . $pe->getMessage());
+	  }	
+	  return $this->conn;
+	  /*
+//   	$this->conn = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->username, $this->password);
+   		$this->conn = new PDO("mysql:host=DB_HOST;dbname=DB_NAME", DB_USERNAME, DB_PASSWORD);
+		   $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+        // Connecting to mysql database
+        $this->conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+        // Check for database connection error
+        if (mysqli_connect_errno()) {
+            echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        }
+
+        // returing connection resource
+        return $this->conn;*/
+    }
+
+}
+
+public function getAllUserTasks() {
+		try {
+            $query = "SELECT * FROM myusers";
+            $sth   = $this->conn->prepare($query);
+            $sth->execute();
+            return $sth->fetchAll();
+            
+        }
+        catch (Exception $exception) 
+			{
+			   $this->LogError($exception->getMessage()."<br/>getAllUserTasks()");
+				return -1;
+			}	
+    }
+	
+	/**
+     * Fetching one user tasks
+     * @param String $id id of the user
+     */
+    public function getSingleUserTasks($id) {
+
+		try {
+            $query = "SELECT * FROM myusers WHERE id = $id";
+            $sth   = $this->conn->prepare($query);
+            $sth->execute();
+			$sth->setFetchMode(PDO::FETCH_ASSOC); 
+            $user_det = $sth->fetchObject();
+			return $user_det;
+            
+        }
+        catch (Exception $exception) 
+			{
+			   $this->LogError($exception->getMessage()."<br/>getSingleUserTasks()");
+				return -1;
+			}	
+    }
+	
+	function editUser($id, $firstname)
+	{
+   try {
+		$query = "UPDATE myusers SET firstname = '$firstname' WHERE id= ? ";
+		
+		echo $query;
+		
+		$sth = $this->conn->prepare($query);
+	//	$sth->bind_param($id);
+		$sth->execute(array($id));
+		return 1;
+	   }
+   catch (Exception $exception) 
+			{
+			   $this->LogError($exception->getMessage()."<br/>editUser()");
+				return -1;
+			}
+ 	}
+	
+	
+		
+	public function insertUserTasks($firstname, $lastname, $email) {
+			try {
+				$query = "INSERT INTO myusers(firstname, lastname, email) values(?, ?, ?)";
+				$sth   = $this->conn->prepare($query);
+				$sth->execute(array($firstname, $lastname, $email));
+				return 1;
+				
+			}
+			catch (Exception $exception) 
+				{
+				   $this->LogError($exception->getMessage()."<br/>insertUserTasks()");
+					return -1;
+				}	
+		}	
+		
+	
+	function deleteUser($id)
+	{
+   try {
+		$query = "DELETE FROM myusers WHERE id= ? ";
+		
+		echo $query;
+		
+		$sth = $this->conn->prepare($query);
+		$sth->execute(array($id));
+		return 1;
+	   }
+   catch (Exception $exception) 
+			{
+			   $this->LogError($exception->getMessage()."<br/>deleteUser()");
+				return -1;
+			}
+ 	}
+	
+	index.php
+	
+function getAllUserTasks()
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();		
+		$result = $db->getAllUserTasks();		
+		
+			$response["success"] = 1;
+			$response["result"] = $result;
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
+
+
+function getSingleUserTasks($id)
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();		
+		$result = $db->getSingleUserTasks($id);	
+		//if($user_id != $id)
+			
+			$response["success"] = 1;
+			$response["result"] = $result;
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
+
+
+function editUser($id)
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();	
+
+		$firstname = $app->request->post('firstname');	
+		$result = $db->editUser($id, $firstname);	
+		
+			$response["success"] = 1;
+			$response["result"] = $result;
+			
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
+
+
+function deleteUser($id)
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();	
+		
+		$result = $db->deleteUser($id);	
+		
+			$response["success"] = 1;
+			$response["result"] = $result;
+			
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
+
+
+function insertUserTasks()
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();	
+
+		$firstname = $app->request->post('firstname');	
+		$lastname = $app->request->post('lastname');	
+		$email = $app->request->post('email');	
+		
+		$result = $db->insertUserTasks($firstname, $lastname, $email);	
+		
+			$response["success"] = 1;
+			$response["result"] = $result;
+			
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
