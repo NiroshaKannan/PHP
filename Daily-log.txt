@@ -298,3 +298,238 @@ function insertUserTasks()
 	
 		getResponse(200, $response);
 }
+
+"CREATE TABLE MyUsers (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+    firstname VARCHAR(30) NOT NULL,
+    lastname VARCHAR(30) NOT NULL,
+    email VARCHAR(50),
+    reg_date TIMESTAMP
+    )";
+	
+CREATE TABLE userqualification(
+   qid int not null auto_increment primary key,
+   degree varchar(355) not null,
+   college_name varchar(250) not null,
+   FOREIGN KEY (id)
+   REFERENCES MyUsers(id)
+);
+
+CREATE TABLE userqualification (
+    qid int(11)  UNSIGNED AUTO_INCREMENT,
+	id int(11) not null,
+    degree varchar(355) not null,
+    college_name varchar(250) not null
+);
+
+CREATE TABLE usercomment (
+    cid int(11)  UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	id int(11) not null,
+    comment varchar(250) not null
+);
+
+
+insertUserQualification
+
+getAllUserDetailWithQualification
+
+getUserDetail
+
+	
+	public function getUserDetailWithQualification($id) {
+			try {
+            $query = "SELECT u.id, u.firstname, u.lastname, u.email, q.degree, q.college_name FROM myusers u INNER JOIN userqualification q ON q.id = u.id WHERE q.id = $id";
+            $sth   = $this->conn->prepare($query);
+            $sth->execute();
+			$sth->setFetchMode(PDO::FETCH_ASSOC); 
+            $user_det = $sth->fetchObject();
+			return $user_det;
+            
+        }
+			catch (Exception $exception) 
+				{
+				   $this->LogError($exception->getMessage()."<br/>getUserDetailWithQualification()");
+					return -1;
+				}	
+		}
+		
+		public function getUserDetailWithQualifications($id) {
+			try {
+            $query = "SELECT u.id, u.firstname, u.lastname, u.email, q.degree, q.college_name FROM myusers u INNER JOIN userqualification q ON q.id = u.id WHERE q.id = $id";
+            $sth   = $this->conn->prepare($query);
+            $sth->execute();
+			$sth->setFetchMode(PDO::FETCH_ASSOC); 
+            $user_det = $sth->fetchAll();
+			return $user_det;
+            
+        }
+			catch (Exception $exception) 
+				{
+				   $this->LogError($exception->getMessage()."<br/>getUserDetailWithQualification()");
+					return -1;
+				}	
+		}
+		
+		public function getUserWithQualifications($id) {
+			
+			try {
+            $query = "SELECT u.id, c.comment FROM myusers u INNER JOIN usercomment c ON c.id = u.id WHERE c.id = $id";
+            $sth   = $this->conn->prepare($query);
+            $sth->execute();
+			$sth->setFetchMode(PDO::FETCH_ASSOC);
+			
+			$query1 = "SELECT u.id, c.comment FROM myusers u INNER JOIN usercomment c ON c.id = u.id WHERE c.id = $id";
+            $sth1   = $this->conn->prepare($query1);
+            $sth1->execute();
+			$sth1->setFetchMode(PDO::FETCH_ASSOC);
+			$user_dets = $sth->fetchObject($st1->fetchAll());
+           
+			return $user_dets;
+			  
+        }
+			catch (Exception $exception) 
+				{
+				   $this->LogError($exception->getMessage()."<br/>getUserWithQualifications()");
+					return -1;
+				}	
+		}
+		
+		/**public function getUserWithQuali() {
+			class Foo
+			{
+				public $bar = 'barValue';
+				protected $baz = 'bazValue';
+				private $tab = 'tabValue';
+			}
+
+			$foo = new Foo();
+
+			$arrayFoo = (array) $foo;
+
+			var_dump($arrayFoo);
+		}*/
+
+	public function getAllUserDetailWithQualification() {
+			try {
+            $query = "SELECT u.id, u.firstname, u.lastname, u.email, q.degree, q.college_name FROM myusers u INNER JOIN userqualification q ON q.id = u.id ";
+            $sth   = $this->conn->prepare($query);
+            $sth->execute();
+			$sth->setFetchMode(PDO::FETCH_ASSOC); 
+            $user_det = $sth->fetchAll();
+			return $user_det;
+            
+        }
+			catch (Exception $exception) 
+				{
+				   $this->LogError($exception->getMessage()."<br/>getAllUserDetailWithQualification()");
+					return -1;
+				}	
+		}	
+	
+	public function insertUserQualification($id, $degree, $college_name) {
+			try {
+				$query = "INSERT INTO userqualification(id, degree, college_name) values(?, ?, ?)";
+				$sth   = $this->conn->prepare($query);
+				$sth->execute(array($id, $degree, $college_name));
+				return 1;
+				
+			}
+			catch (Exception $exception) 
+				{
+				   $this->LogError($exception->getMessage()."<br/>insertUserTasks()");
+					return -1;
+				}	
+		}	
+	
+	
+	handler
+	
+	
+function insertUserQualification()
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();	
+
+		$id = $app->request->post('id');	
+		$degree = $app->request->post('degree');	
+		$college_name = $app->request->post('college_name');	
+		
+		$result = $db->insertUserQualification($id, $degree, $college_name);	
+		
+			$response["success"] = 1;
+			$response["result"] = $result;
+			
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
+
+
+function getUserDetailWithQualification($id)
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();		
+		$result = $db->getUserDetailWithQualification($id);	
+		//if($user_id != $id)
+			
+			$response["success"] = 1;
+			$response["result"] = $result;
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
+
+function getUserDetail($id)
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();		
+		$result = $db->getUserWithQualifications($id);
+		
+		$result2 = $db->getUserDetailWithQualifications($id);
+		
+		//$result3 = $db->getUserWithQuali();
+	
+		
+		//if($user_id != $id)
+		
+		$response["success"] = 1;
+		$response["user_detail"] = $result;
+		$response["user_detail_with_qualification"] = $result2;
+		//$response["info"] = $result3;
+		$response["message"] = 'success';	
+
+		getResponse(200, $response);
+}
+
+function getUserWithQualifications($id)
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();			
+		$result4 = $db->getUserWithQualifications($id);
+		//if($user_id != $id)
+			
+			$response["success"] = 1;
+			$response["user_qualification"] = $result4;
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
+
+
+function getAllUserDetailWithQualification()
+{
+		$response = array();    			
+		$app = new \Slim\Slim();
+		$db = new DbHandler();		
+		$result = $db->getAllUserDetailWithQualification();		
+		
+			$response["success"] = 1;
+			$response["result"] = $result;
+			$response["message"] = 'success';	
+	
+		getResponse(200, $response);
+}
