@@ -533,3 +533,7 @@ function getAllUserDetailWithQualification()
 	
 		getResponse(200, $response);
 }
+
+
+			$data =	$this->getAllUserDetailWithQualification($id);
+			$user_dets->result = $data;
