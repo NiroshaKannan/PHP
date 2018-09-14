@@ -537,3 +537,86 @@ function getAllUserDetailWithQualification()
 
 			$data =	$this->getAllUserDetailWithQualification($id);
 			$user_dets->result = $data;
+			
+			
+			
+			
+----------------------------------------------------------------------------------------------------------------------------------------------
+Day 4: 14-09-2018 Friday
+----------------------------------------------------------------------------------------------------------------------------------------------
+diff between request and post:
+
+https://stackoverflow.com/questions/1924939/among-request-get-and-post-which-one-is-the-fastest
+
+
+
+	//
+	
+	
+	Hotel: Eleon Hotel
+Statistics type: daily
+Period: the 24th
+of May
+Cleaned rooms: 120
+Stayover: 80
+Departures: 40
+Personnel: 4 cleaners. Anna Olsson, Petra Svensson, Mohammed Ali, Astrid Lindgren
+
+SELECT count() 
+FROM house_hotel hh
+INNER JOIN house_rooms hr ON hr.hotal_id = hh.hid 
+INNER JOIN house_task ht ON ht.room_id = hr.room_id 
+WHERE hotal_name =
+
+
+SELECT hr.hotel_id, hr.rid,ht.stay_over,ht.departure,ht.clean,ht.priority
+FROM house_rooms hr
+INNER JOIN house_task ht ON ht.room_id = hr.rid
+WHERE hr.hotel_id =2
+
+
+SELECT hr.hotel_id, hr.rid,count(ht.stay_over),count(ht.departure),count(ht.clean),cont(ht.priority)
+FROM house_rooms hr
+INNER JOIN house_task ht ON ht.room_id = hr.rid
+WHERE hr.hotel_id =2 and (ht.stay_over = 1) and (ht.departure = 1) and (ht.priority =1)
+
+SELECT column1 = (SELECT column-name FROM table-name WHERE condition),
+       column-names
+  FROM table-name
+ WEHRE condition
+ 
+ SELECT 
+	hr.hotel_id,
+	ht.stay_over = (SELECT COUNT(ht.stay_over) FROM house_task WHERE ht.stay_over = 1),
+	ht.departure = (SELECT COUNT(ht.departure) FROM house_task WHERE ht.departure = 1),
+	ht.clean = (SELECT COUNT(ht.clean) FROM house_task WHERE ht.clean = 1),
+	ht.priority = (SELECT COUNT(ht.priority) FROM house_task WHERE ht.room_id = hr.rid)
+FROM house_rooms hr
+INNER JOIN house_task ht ON ht.room_id = hr.rid
+
+
+
+ SELECT 
+	hr.hotel_id,
+	ht.stay_over = (SELECT COUNT(ht.stay_over) FROM house_task WHERE ht.stay_over == 1),
+	ht.departure = (SELECT COUNT(ht.departure) FROM house_task WHERE ht.departure ==1),
+	ht.clean = (SELECT COUNT(ht.clean) FROM house_task WHERE ht.clean ==1),
+	ht.priority = (SELECT COUNT(ht.priority) FROM house_task WHERE ht.priority == 1)
+FROM house_rooms hr
+INNER JOIN house_task ht ON ht.room_id = hr.rid
+WHERE hr.hotel_id =2
+
+
+
+
+ SELECT 
+	hr.hotel_id,
+	count(ht.stay_over) = (SELECT ht.stay_over FROM house_task ht INNER JOIN house_rooms hr ON ht.room_id = hr.rid WHERE ht.stay_over = 1 and hr.hotel_id =2),
+	count(ht.departure) = (SELECT ht.departure FROM house_task ht INNER JOIN house_rooms hr ON ht.room_id = hr.rid WHERE ht.departure = 1 and hr.hotel_id =2),
+	count(ht.clean) = (SELECT ht.clean FROM house_task ht INNER JOIN house_rooms hr ON ht.room_id = hr.rid WHERE ht.clean = 1 and hr.hotel_id =2),
+	count(ht.priority) = (SELECT ht.priority FROM house_task ht INNER JOIN house_rooms hr ON ht.room_id = hr.rid WHERE ht.priority = 1 and hr.hotel_id =2)
+FROM house_rooms hr
+INNER JOIN house_task ht ON ht.room_id = hr.rid
+WHERE hr.hotel_id =2
+ 
+	
